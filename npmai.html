@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="hi">
+
+<head>
+    <title>NPMAI Chat</title>
+    <style>
+        body {
+            font-family: Arial;
+            max-width: 600px;
+            margin: 50px auto;
+        }
+
+        #output {
+            background: #f0f0f0;
+            padding: 15px;
+            border-radius: 8px;
+            min-height: 100px;
+            margin-top: 10px;
+        }
+
+        input {
+            width: 70%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            padding: 10px 20px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+
+<body>
+    <h2>🤖 NPMAI Chat</h2>
+
+    <input type="text" id="userInput" placeholder="Kuch poocho..." />
+    <button onclick="sendMessage()">Send</button>
+
+    <div id="output">Yahan jawab aayega...</div>
+
+    <script>
+
+        async function askNpmai(prompt, model = "llama3.2") {
+            const res = await fetch("https://npmaiecosystem-load_balancer.hf.space/load_balancer", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    prompt,
+                    model,
+                    temperature: 0.5,
+                    change: true
+                })
+            });
+
+            if (!res.ok) throw new Error(`API Error: ${res.status}`)
+            const data = await res.json();
+            return data.response;
+        }
+
+        // ✅ This one small wrapper fixes the await error
+        (async () => {
+            const answer = await askNpmai("Explain LARA in one sentence");
+            console.log("✅ Answer:", answer);
+        })();
+
+
+
+
+    </script>
+</body>
+
+</html>
